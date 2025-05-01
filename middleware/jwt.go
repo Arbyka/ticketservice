@@ -33,7 +33,7 @@ func JWTAuthMiddleware() gin.HandlerFunc {
 
         if claims, ok := token.Claims.(jwt.MapClaims); ok && token.Valid {
             c.Set("userID", claims["user_id"])
-            c.Set("role", claims["role"]) // <-- Tambahkan ini!
+            c.Set("role", claims["role"])
         } else {
             c.JSON(http.StatusUnauthorized, gin.H{"error": "Invalid token"})
             c.Abort()

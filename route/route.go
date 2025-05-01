@@ -6,7 +6,12 @@ import (
 	"ticketing/middleware"
 )
 
-func SetupRouter(authController *controller.AuthController, eventController *controller.EventController) *gin.Engine {
+func SetupRouter(
+    authController *controller.AuthController,
+    eventController *controller.EventController,
+    ticketController *controller.TicketController,
+    ) *gin.Engine {
+
     r := gin.Default()
 
     r.POST("/register", authController.Register)
@@ -21,12 +26,12 @@ func SetupRouter(authController *controller.AuthController, eventController *con
     }
 
     ticket := r.Group("/tickets")
-    {
-        ticket.GET("",) // Melihat daftar tiket
-        ticket.POST("",) // Membeli atau memesan tiket.
-        ticket.GET("/:id",) // Melihat detail tiket tertentu.
-        ticket.PATCH("/:id",) // Memperbarui status tiket menjadi 'cancelled'.
-    }
+	{
+		ticket.GET("", ticketController.GetAll)
+		ticket.POST("", ticketController.Create)
+		ticket.GET("/:id", middleware.JWTAuthMiddleware(), middleware.AdminOnlyMiddleware(), ticketController.GetByID)
+		ticket.PATCH("/:id", middleware.JWTAuthMiddleware(), middleware.AdminOnlyMiddleware(), ticketController.Cancel)
+	}
 
     return r
 }
