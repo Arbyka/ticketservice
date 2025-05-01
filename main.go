@@ -16,6 +16,10 @@ func main() {
     authService := service.NewAuthService(userRepo)
     authController := controller.NewAuthController(authService)
 
-    r := route.SetupRouter(authController)
+	eventRepo := repository.NewEventRepository(db)
+	eventService := service.NewEventService(eventRepo)
+	eventController := controller.NewEventController(eventService)
+
+    r := route.SetupRouter(authController, eventController)
     r.Run(":8080")
 }
