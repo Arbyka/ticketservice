@@ -10,6 +10,7 @@ func SetupRouter(
     authController *controller.AuthController,
     eventController *controller.EventController,
     ticketController *controller.TicketController,
+    reportController *controller.ReportsController,
     ) *gin.Engine {
 
     r := gin.Default()
@@ -31,6 +32,12 @@ func SetupRouter(
 		ticket.POST("", ticketController.Create)
 		ticket.GET("/:id", middleware.JWTAuthMiddleware(), middleware.AdminOnlyMiddleware(), ticketController.GetByID)
 		ticket.PATCH("/:id", middleware.JWTAuthMiddleware(), middleware.AdminOnlyMiddleware(), ticketController.Cancel)
+	}
+
+    report := r.Group("/reports", middleware.JWTAuthMiddleware(), middleware.AdminOnlyMiddleware())
+	{
+		report.GET("/summary", reportController.GetSummaryReport)
+		report.GET("/event/:id", reportController.GetEventReport)
 	}
 
     return r

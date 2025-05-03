@@ -24,6 +24,10 @@ func main() {
     ticketService := service.NewTicketService(ticketRepo, eventRepo, db)
     ticketController := controller.NewTicketController(ticketService)
 
-    r := route.SetupRouter(authController, eventController, ticketController)
+    reportRepo := repository.NewReportsRepository(db)
+	reportService := service.NewReportsService(reportRepo)
+	reportController := controller.NewReportsController(reportService)
+
+    r := route.SetupRouter(authController, eventController, ticketController, reportController)
     r.Run(":8080")
 }
