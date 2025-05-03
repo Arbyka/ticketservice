@@ -28,6 +28,11 @@ func main() {
 	reportService := service.NewReportsService(reportRepo)
 	reportController := controller.NewReportsController(reportService)
 
-    r := route.SetupRouter(authController, eventController, ticketController, reportController)
+    eventImageRepo := repository.NewEventImageRepository(db)
+	eventImageService := service.NewEventImageService(eventImageRepo)
+	eventImageController := controller.NewEventImageController(eventImageService)
+
+    r := route.SetupRouter(authController, eventController, ticketController, reportController, eventImageController)
+    r.Static("/uploads", "./uploads") // supaya bisa akses URL hasil upload
     r.Run(":8080")
 }

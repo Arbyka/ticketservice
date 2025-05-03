@@ -11,6 +11,7 @@ func SetupRouter(
     eventController *controller.EventController,
     ticketController *controller.TicketController,
     reportController *controller.ReportsController,
+    eventImageController *controller.EventImageController,
     ) *gin.Engine {
 
     r := gin.Default()
@@ -39,6 +40,8 @@ func SetupRouter(
 		report.GET("/summary", reportController.GetSummaryReport)
 		report.GET("/event/:id", reportController.GetEventReport)
 	}
+
+    r.POST("/event-images", middleware.JWTAuthMiddleware(), middleware.AdminOnlyMiddleware(), eventImageController.Upload)
 
     return r
 }
